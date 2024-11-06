@@ -5,5 +5,10 @@ int main()
     int width = 350;
     InitWindow(width, 200, "Daniel's Window");
 
-    while (true) {}
+    while (!WindowShouldClose()) 
+    {
+        BeginDrawing();
+        ClearBackground(RED);
+        EndDrawing();
+    }
 }
