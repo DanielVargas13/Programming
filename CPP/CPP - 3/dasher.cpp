@@ -28,6 +28,24 @@ AnimData updateAnimation(AnimData data, float deltaTime, int animFrames) {
     return data;
 }
 
+bool verifyEndGame(
+    bool collision, 
+    int pos[], 
+    float finishLine, 
+    float scarfyX
+) {
+    if (collision) {
+        DrawText("Game Over!", pos[0]/4, pos[1]/2, 40, RED);
+        return true;
+     }
+     else if (scarfyX >= (finishLine + 300))
+     {
+        DrawText("You Win!", pos[0]/4, pos[1]/2, 40, GREEN);
+        return true;
+     }
+     return false;
+}
+
 int main() 
 {
     const int gravity = 1000;
@@ -91,6 +109,8 @@ int main()
 
     Texture2D foreground = LoadTexture("textures/foreground.png");
     float fgX = 0.0;
+
+    bool collision = false;
 
     SetTargetFPS(60);
     while (!WindowShouldClose()) 
@@ -156,16 +176,39 @@ int main()
             scarfyData = updateAnimation(scarfyData, dT, 5);
         }
 
+        for (AnimData nebulaInst : nebulae) {
+            float pad = 50;
+            Rectangle nebRec{
+                nebulaInst.pos.x + pad,
+                nebulaInst.pos.y + pad,
+                nebulaInst.box.width - (2 * pad),
+                nebulaInst.box.height - (2 * pad),
+            };
+            Rectangle scarfyRec{
+                scarfyData.pos.x,
+                scarfyData.pos.y,
+                scarfyData.box.width,
+                scarfyData.box.height,
+            };
+            if (CheckCollisionRecs(nebRec, scarfyRec)) {
+                collision = true;
+            }
+        };
+
         for (int i = 0; i < sizeOfNebulae; i++) {
             nebulae[i].pos.x += nebVel * dT;
             nebulae[i] = updateAnimation(nebulae[i], dT, 7);
-            DrawTextureRec(nebula, nebulae[i].box, nebulae[i].pos, WHITE);
+            if (!verifyEndGame(collision, windowDimensions, finishLine, scarfyData.pos.x)) {
+                DrawTextureRec(nebula, nebulae[i].box, nebulae[i].pos, WHITE);
+            }
         };
 
         finishLine += nebVel * dT;
         
         // Draw scarfy
-        DrawTextureRec(scarfy, scarfyData.box, scarfyData.pos, WHITE);    
+        if (!verifyEndGame(collision, windowDimensions, finishLine, scarfyData.pos.x)) {
+            DrawTextureRec(scarfy, scarfyData.box, scarfyData.pos, WHITE);     
+        }
 
         EndDrawing();
     }
