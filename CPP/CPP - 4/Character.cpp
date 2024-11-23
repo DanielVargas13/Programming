@@ -1,7 +1,8 @@
 #include "Character.h"
 #include "raymath.h"
 
-Character::Character(int windowWidth, int windowHeight) {
+Character::Character(int windowWidth, int windowHeight) 
+{
     width = currentTex.width / maxFrame;
     height = currentTex.height;
 
@@ -65,4 +66,13 @@ void Character::tick(float deltaTime)
 void Character::undoMovemnt()
 {
     worldPos = worldPosLastFrame;
+}
+
+Rectangle Character::getCollisonBox() {
+    return Rectangle{
+        x: screenPos.x,
+        y: screenPos.y,
+        width: width * scale,
+        height: height * scale
+    };
 }
