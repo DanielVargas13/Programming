@@ -10,11 +10,11 @@ public:
     void undoMovemnt();
     Rectangle getCollisonBox();
     virtual void tick(float deltaTime);
+    virtual Vector2 getScreenPos() = 0;
 protected:
     Texture2D idle = LoadTexture("characters/knight_idle_spritesheet.png");
     Texture2D run = LoadTexture("characters/knight_run_spritesheet.png");
     Texture2D currentTex = idle;
-    Vector2 screenPos{};
     Vector2 worldPos{};
     Vector2 worldPosLastFrame{};
     float rightLeft = 1.f;
@@ -26,6 +26,7 @@ protected:
     float width{};
     float height{};
     float scale = 4.f;
+    Vector2 velocity{};
 };
 
 #endif

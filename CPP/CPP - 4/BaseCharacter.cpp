@@ -1,4 +1,5 @@
 #include "BaseCharacter.h"
+#include "raymath.h"
 
 BaseCharacter::BaseCharacter() {}
 
@@ -9,8 +10,8 @@ void BaseCharacter::undoMovemnt()
 
 Rectangle BaseCharacter::getCollisonBox() {
     return Rectangle{
-        x: screenPos.x,
-        y: screenPos.y,
+        x: getScreenPos().x,
+        y: getScreenPos().y,
         width: width * scale,
         height: height * scale
     };
@@ -29,6 +30,20 @@ void BaseCharacter::tick(float deltaTime)
             frame = 0;
     }
 
+        if (Vector2Length(velocity) != 0.0)
+    {
+        Vector2 normalizedDirection = Vector2Normalize(velocity);
+        worldPos = Vector2Add(worldPos, Vector2Scale(normalizedDirection, speed));
+        rightLeft = velocity.x < 0.f ? -1.f : 1.f;
+        currentTex = run;
+    }
+    else
+    {
+        currentTex = idle;
+    }
+
+    velocity = {};
+
     Rectangle source{
         x : frame * width,
         y : 0.f,
@@ -36,8 +51,8 @@ void BaseCharacter::tick(float deltaTime)
         height : height,
     };
     Rectangle dest{
-        x : screenPos.x,
-        y : screenPos.y,
+        x : getScreenPos().x,
+        y : getScreenPos().y,
         width : float(scale * width),
         height : float(scale * height),
     };
