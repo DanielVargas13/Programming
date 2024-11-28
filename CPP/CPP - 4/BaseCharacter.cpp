@@ -59,3 +59,10 @@ void BaseCharacter::tick(float deltaTime)
 
     DrawTexturePro(currentTex, source, dest, Vector2{}, 0.0, WHITE);
 }
+
+void BaseCharacter::UnloadTextures() 
+{
+    UnloadTexture(currentTex);
+    UnloadTexture(run);
+    UnloadTexture(idle);
+}

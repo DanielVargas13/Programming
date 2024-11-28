@@ -11,6 +11,9 @@ public:
     Rectangle getCollisonBox();
     virtual void tick(float deltaTime);
     virtual Vector2 getScreenPos() = 0;
+    bool getAlive() { return alive; }
+    void setAlive(bool isAlive) { alive = isAlive; }
+    virtual void UnloadTextures();
 protected:
     Texture2D idle = LoadTexture("characters/knight_idle_spritesheet.png");
     Texture2D run = LoadTexture("characters/knight_run_spritesheet.png");
@@ -27,6 +30,8 @@ protected:
     float height{};
     float scale = 4.f;
     Vector2 velocity{};
+private:
+    bool alive = true;
 };
 
 #endif

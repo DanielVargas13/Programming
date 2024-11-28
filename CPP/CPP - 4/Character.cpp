@@ -19,6 +19,8 @@ Vector2 Character::getScreenPos()
 
 void Character::tick(float deltaTime)
 {
+    if (!getAlive()) return;
+    
     if (IsKeyDown(KEY_A))
         velocity.x -= 1.0;
     if (IsKeyDown(KEY_D))
@@ -42,7 +44,7 @@ void Character::tick(float deltaTime)
             width: scale * weapon.width,
             height: scale * weapon.height
         };
-        rotation = 35.f;
+        rotation = IsMouseButtonDown(MOUSE_BUTTON_LEFT) ? 35.f : 0.f;
     } else {
         origin = {weapon.width * scale, weapon.height * scale};
         offset = {25.f, 55.f};
@@ -52,7 +54,7 @@ void Character::tick(float deltaTime)
             width: scale * weapon.width,
             height: scale * weapon.height
         };
-        rotation = -35.f;
+        rotation = IsMouseButtonDown(MOUSE_BUTTON_LEFT) ? -35.f : 0.f;
     }
 
     Rectangle source{
@@ -69,12 +71,17 @@ void Character::tick(float deltaTime)
     };
 
     DrawTexturePro(weapon, source, dest, origin, rotation, WHITE);
+}
 
-    DrawRectangleLines(
-        weaponCollisonBox.x,
-        weaponCollisonBox.y,
-        weaponCollisonBox.width,
-        weaponCollisonBox.height,
-        RED
-    );
+void Character::takeDamage(float damage) 
+{
+    health -= damage;
+    if (health <= 0.f) {
+        setAlive(false);
+    }
+}
+
+void Character::UnloadTextures() {
+    UnloadTexture(weapon);
+    BaseCharacter::UnloadTextures();
 }
